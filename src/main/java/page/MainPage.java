@@ -1,6 +1,7 @@
 package page;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -149,9 +150,17 @@ public class MainPage {
 	// this method checks if the attempt to create a duplicate category was not successful
 		public void ValidateDuplicateCategoryIsNotListed() {
 			
-			StoreAllCategories();
+			int catsize = driver.findElements(By.xpath("//div[@class='controls']/a")).size();
+			HashSet<String> Cats = new HashSet<String>();
+
+			for (int i = 2; i <= catsize; i++) {
+
+				String CategoryName = driver.findElement(By.xpath("//div[@class='controls']/a[" + i + "]/span")).getText();
+				Cats.add(CategoryName);
+
+			}
 			
-			if(categories.contains(CatName) == false) {
+			if(Cats.add(CatName) == false) {
 				System.out.println("Rule is successful the duplicate Category name was not allowed to be created!");
 			}else {
 				System.out.println("The rule failed and the new duplicate category was actually created...");
