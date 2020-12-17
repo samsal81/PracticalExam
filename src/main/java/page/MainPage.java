@@ -1,7 +1,9 @@
 package page;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -44,9 +46,11 @@ public class MainPage {
 	WebElement ColourSelector;
 	@FindBy(how = How.NAME, using = "categorydata")
 	WebElement CreateCategoryField;
+	@FindBy(how = How.NAME, using = "due_month")
+	WebElement MonthDropDownList;
 
 	// Interactive Methods
-	
+
 	// this method clicks the check box that selects all the categories listed
 	public void ClickCheckBoxAll() {
 		CheckBoxAll.sendKeys(Keys.SPACE);
@@ -58,15 +62,16 @@ public class MainPage {
 		for (String i : categories) {
 			AddCategoryField.sendKeys(i);
 			ButtonAddCategoryField.click();
-			
-			// since the first category input is followed by an error I had to create this condition
-			if(categories.indexOf(i) == 0) {
+
+			// since the first category input is followed by an error I had to create this
+			// condition
+			if (categories.indexOf(i) == 0) {
 				driver.navigate().back();
-				//AddCategoryField.clear();
-				//AddCategoryField.sendKeys(i);
+				// AddCategoryField.clear();
+				// AddCategoryField.sendKeys(i);
 				ButtonAddCategoryField.click();
 			}
-			
+
 		}
 
 	}
@@ -83,97 +88,130 @@ public class MainPage {
 
 		}
 	}
-	
+
 	// this method checks if all the list items are selected
 	public void ValidateAllListItemsChecked() {
-		
-		for (int i=1; i<cat-1; i++) {
-			boolean selected = driver.findElement(By.xpath("//*[@id='todos-content']/form/ul/li["+i+"]/input")).isSelected();
-			if(selected == true) {
+
+		for (int i = 1; i < cat - 1; i++) {
+			boolean selected = driver.findElement(By.xpath("//*[@id='todos-content']/form/ul/li[" + i + "]/input"))
+					.isSelected();
+			if (selected == true) {
 				System.out.println(categories.get(i) + " is selected!");
-			}else {
+			} else {
 				System.out.println(categories.get(i) + " is not selected...");
 			}
-			
+
 		}
 	}
-	
+
 	// this method clicks the remove button
 	public void ClickRemoveButton() {
-		
+
 		RemoveButton.click();
 		driver.navigate().back();
 		RemoveButton.click();
 	}
-	
-	// this method takes the first item in the array list and add it to the todo list
+
+	// this method takes the first item in the array list and add it to the todo
+	// list
 	public void AddOneListItemToList() {
-		
+
 		AddCategoryField.sendKeys(categories.get(0));
 		ButtonAddCategoryField.click();
 		driver.navigate().back();
 		ButtonAddCategoryField.click();
 	}
-	
+
 	// this method removes the first item on the item list
 	public void SelectAndRemoveOneListItem() {
-		
+
 		driver.findElement(By.xpath("//*[@id='todos-content']/form/ul/li[1]/input")).click();
 		RemoveButton.click();
 		driver.navigate().back();
 		RemoveButton.click();
 	}
-	
+
 	// this method creates a new category
 	public void CreateANewCategory(String CatName) {
-		
+
 		this.CatName = CatName;
 		CreateCategoryField.sendKeys(CatName);
 		Select dropdown = new Select(ColourSelector);
 		dropdown.selectByVisibleText("Yellow");
 		CreateCategoryButton.click();
-		
+
 	}
-	
+
 	// this method checks if the newly created category was displayed on the list
 	public void ValidateNewCategoryIsListed() {
-		
+
 		StoreAllCategories();
-		
-		if(categories.contains(CatName)) {
+
+		if (categories.contains(CatName)) {
 			System.out.println("Newly add category " + CatName + "is displayed!");
-		}else {
+		} else {
 			System.out.println("No new catgory is displayed...");
 		}
 	}
-	
-	// this method checks if the attempt to create a duplicate category was not successful
-		public void ValidateDuplicateCategoryIsNotListed() {
-			
-			int catsize = driver.findElements(By.xpath("//div[@class='controls']/a")).size();
-			HashSet<String> Cats = new HashSet<String>();
 
-			for (int i = 2; i <= catsize; i++) {
+	// this method checks if the attempt to create a duplicate category was not
+	// successful
+	public void ValidateDuplicateCategoryIsNotListed() {
 
-				String CategoryName = driver.findElement(By.xpath("//div[@class='controls']/a[" + i + "]/span")).getText();
-				Cats.add(CategoryName);
+		int catsize = driver.findElements(By.xpath("//div[@class='controls']/a")).size();
+		// using a hashset since this type of list prohibits duplicates which helps in
+		// this validation
+		HashSet<String> Cats = new HashSet<String>();
 
-			}
-			
-			if(Cats.add(CatName) == false) {
-				System.out.println("Rule is successful the duplicate Category name was not allowed to be created!");
-			}else {
-				System.out.println("The rule failed and the new duplicate category was actually created...");
-			}
+		for (int i = 2; i <= catsize; i++) {
+
+			String CategoryName = driver.findElement(By.xpath("//div[@class='controls']/a[" + i + "]/span")).getText();
+			Cats.add(CategoryName);
+
 		}
-		
-	// this message validates the duplicate message is displayed if a duplicate category name is attempted
+
+		if (Cats.add(CatName) == false) {
+			System.out.println("Rule is successful the duplicate Category name was not allowed to be created!");
+		} else {
+			System.out.println("The rule failed and the new duplicate category was actually created...");
+		}
+	}
+
+	// this message validates the duplicate message is displayed if a duplicate
+	// category name is attempted
 	public void ValidateDuplicateWarningMessage() {
-		
-		if(DuplicateWarningMessage.isDisplayed()) {
+
+		if (DuplicateWarningMessage.isDisplayed()) {
 			System.out.println("Success! The duplicate warning message was displayed!");
-		}else {
+		} else {
 			System.out.println("Faliure! The duplicate warning message failed to display!");
+		}
+	}
+
+	// this method stores all the months available in the months list and compare it
+	// to the correct number of months to validate that all months are included
+	public void ValidateMonthDropDownListHasAllTheMonths() {
+
+		Select ElementMonths = new Select(MonthDropDownList);
+		List<WebElement> StringMonths = ElementMonths.getOptions();
+
+		ArrayList<String> actualMonths = new ArrayList<String>();
+
+		for (int i = 1; i <= 12; i++) {
+
+			String content = StringMonths.get(i).getText();
+			System.out.println(content);
+			actualMonths.add(content);
+
+		}
+
+		ArrayList<String> expectedMonths = new ArrayList<String>(Arrays.asList("Jan", "Feb", "Mar", "Apr",
+				"May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
+
+		if (actualMonths.equals(expectedMonths)) {
+			System.out.println("Success! The month drop down has all the months!");
+		} else {
+			System.out.println("Failure, the month drop down does not have all the months...");
 		}
 	}
 

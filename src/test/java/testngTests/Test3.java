@@ -28,7 +28,9 @@ public class Test3 {
 
 	@Test
 	public void ValidateMonthDropDownHasAllMonths() {
-
+		
+		// this method stores all the months available in the months list and compare it to the correct number of months to validate that all months are included
+		mainp.ValidateMonthDropDownListHasAllTheMonths();
 	}
 
 	@AfterMethod
@@ -37,6 +39,6 @@ public class Test3 {
 		Thread.sleep(3000);
 
 		// closes and quits the driver
-		BrowserFactory.tearDown();
+		//BrowserFactory.tearDown();
 	}
 }

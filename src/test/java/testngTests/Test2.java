@@ -29,10 +29,17 @@ public class Test2 {
 	@Test
 	public void ValidateNoDuplicateCategoryAndMessageDisplayed() throws InterruptedException {
 		
+		// this method creates a new category
 		mainp.CreateANewCategory("java");
+		
+		// this message validates the duplicate message is displayed if a duplicate category name is attempted
 		mainp.ValidateDuplicateWarningMessage();
 		Thread.sleep(2000);
+		
+		// This command navigates the browser to the previous page
 		driver.navigate().back();
+		
+		// this method checks if the attempt to create a duplicate category was not successful
 		mainp.ValidateDuplicateCategoryIsNotListed();
 
 	}
@@ -43,6 +50,6 @@ public class Test2 {
 		Thread.sleep(3000);
 
 		// closes and quits the driver
-		//BrowserFactory.tearDown();
+		BrowserFactory.tearDown();
 	}
 }
