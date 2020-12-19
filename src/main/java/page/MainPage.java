@@ -13,6 +13,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.Select;
 
+import org.junit.Assert;
+
 public class MainPage {
 
 	WebDriver driver;
@@ -48,6 +50,12 @@ public class MainPage {
 	WebElement CreateCategoryField;
 	@FindBy(how = How.NAME, using = "due_month")
 	WebElement MonthDropDownList;
+	@FindBy(how = How.XPATH, using = "//button[contains(text(), 'Set SkyBlue Background')]")
+	WebElement SkyBlueBGButton;
+	@FindBy(how = How.XPATH, using = "//button[contains(text(), 'Set White Background')]")
+	WebElement WhiteBGButton;
+	@FindBy(how = How.XPATH, using = "//body")
+	WebElement PageBody;
 
 	// Interactive Methods
 
@@ -205,14 +213,51 @@ public class MainPage {
 
 		}
 
-		ArrayList<String> expectedMonths = new ArrayList<String>(Arrays.asList("Jan", "Feb", "Mar", "Apr",
-				"May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
+		ArrayList<String> expectedMonths = new ArrayList<String>(
+				Arrays.asList("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
 
 		if (actualMonths.equals(expectedMonths)) {
 			System.out.println("Success! The month drop down has all the months!");
 		} else {
 			System.out.println("Failure, the month drop down does not have all the months...");
 		}
+	}
+
+	public void VerifyBlueSkyBGButtonExists() {
+		SkyBlueBGButton.isDisplayed();
+	}
+
+	public void ClickBlueSkyBGButton() {
+
+		SkyBlueBGButton.click();
+	}
+
+	public void VerifyBGColorTurnedSkyBlue() {
+		
+		String ActualColor = PageBody.getCssValue("background-color");
+		String ExpectedColor = "rgba(135, 206, 235, 1)";
+		System.out.println(ExpectedColor);
+		System.out.println(ActualColor);
+		Assert.assertEquals(ExpectedColor, ActualColor);
+	}
+	
+	public void VerifyWhiteBGButtonExists() {
+		
+		WhiteBGButton.isDisplayed();
+	}
+	
+	public void ClickWhiteBGButton() {
+		
+		WhiteBGButton.click();
+	}
+	
+public void VerifyBGColorTurnedWhite() {
+		
+		String ActualColor = PageBody.getCssValue("background-color");
+		String ExpectedColor = "rgba(255, 255, 255, 1)";
+		System.out.println(ExpectedColor);
+		System.out.println(ActualColor);
+		Assert.assertEquals(ExpectedColor, ActualColor);
 	}
 
 }
